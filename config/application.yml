@@ -1,0 +1,26 @@
+
+logging:
+  level:
+    root: INFO
+    '[org.springframework.jdbc.core]': TRACE
+    '[org.springframework.transaction]': TRACE
+    
+---
+spring.profiles: dev
+
+spring:
+
+  datasource:
+    url: jdbc:h2:mem:reviewsdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    
+    hikari:
+      jdbc-url: jdbc:h2:mem:reviewsdb;DB_CLOSE_DELAY=-1
+
+  liquibase:
+    change-log: classpath:liquibase/create-tables.xml
+    enabled: true
+    #url: jdbc:h2:mem:reviewsdb;DB_CLOSE_DELAY=-1
+    #user: sa
+    #password:

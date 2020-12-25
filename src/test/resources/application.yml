@@ -1,0 +1,12 @@
+
+logging:
+  level:
+    root: INFO
+    '[org.springframework.jdbc.core]': TRACE
+    '[org.springframework.transaction]': TRACE
+    
+spring:
+
+  liquibase:
+    change-log: classpath:liquibase/create-tables.xml
+    enabled: true
