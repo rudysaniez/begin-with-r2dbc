@@ -21,7 +21,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.me.r2dbc.h2.review.bo.Review;
-import com.me.r2dbc.h2.review.repository.ReviewRepository;
 import com.me.r2dbc.h2.review.service.AsciiArtService;
 
 @EnableScheduling
@@ -48,7 +47,7 @@ public class Application {
 
 	@Profile("dev")
 	@Bean @Autowired
-	public ApplicationRunner setup(NamedParameterJdbcTemplate jdbcTemplate, ReviewRepository reviewRepository, AsciiArtService asciiService) {
+	public ApplicationRunner setup(NamedParameterJdbcTemplate jdbcTemplate, AsciiArtService asciiService) {
 		
 		return args -> {
 			
