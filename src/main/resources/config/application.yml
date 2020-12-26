@@ -8,3 +8,8 @@ spring:
     hikari:
       maximum-pool-size: 4
       connection-timeout: 20000
+
+  data:
+    jdbc:
+      repositories:
+        enabled: false
