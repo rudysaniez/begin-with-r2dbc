@@ -17,31 +17,31 @@ import lombok.EqualsAndHashCode.Exclude;
 
 @Data
 @Table(value = "review")
-public class Review implements Serializable {
+public class ReviewEntity implements Serializable {
 
 	@Exclude
 	@Id @Column("id")
-	private final Integer id;
+	private Integer id;
 	
 	@NotNull
 	@Column("reviewID")
-	private final Integer reviewID;
+	private Integer reviewID;
 	
 	@NotNull
 	@Column("productID")
-	private final Integer productID;
+	private Integer productID;
 	
 	@NotEmpty @Exclude
 	@Column("author")
-	private final String author;
+	private String author;
 	
 	@NotEmpty @Exclude
 	@Column("subject")
-	private final String subject;
+	private String subject;
 	
 	@NotEmpty @Exclude
 	@Column("content")
-	private final String content;
+	private String content;
 	
 	@Exclude @Nullable
 	@Column("creationDate")
@@ -53,8 +53,20 @@ public class Review implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	public ReviewEntity() {
+		
+		id = null;
+		reviewID = null;
+		productID = null;
+		author = null;
+		subject = null;
+		content = null;
+		creationDate = null;
+		updateDate = null;
+	}
+	
 	@PersistenceConstructor
-	public Review(Integer id, Integer reviewID, Integer productID, String author, String subject, String content) {
+	public ReviewEntity(Integer id, Integer reviewID, Integer productID, String author, String subject, String content) {
 		
 		this.id = id;
 		this.reviewID = reviewID;
@@ -67,10 +79,10 @@ public class Review implements Serializable {
 	
 	/**
 	 * @param id
-	 * @return {@link Review}
+	 * @return {@link ReviewEntity}
 	 */
-	public Review withId(Integer id) {
-		return new Review(id, reviewID, productID, author, subject, content);
+	public ReviewEntity withId(Integer id) {
+		return new ReviewEntity(id, reviewID, productID, author, subject, content);
 	}
 	
 	

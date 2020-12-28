@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<groupId>com.me.work.example</groupId>
-	<artifactId>spring-data-r2dbc-h2</artifactId>
+	<artifactId>review-reactive-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	
 	<parent>
@@ -25,7 +25,39 @@
 	
 	<build>
 		<plugins>
-
+			
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-source-mapstruct</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/generated-sources/annotations/</source>
+							</sources>
+						</configuration>
+					</execution>
+					
+					<execution>
+						<id>add-source-generated-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/generated/java</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -85,6 +117,11 @@
 		</dependency>
 		
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+		</dependency>
+		
+		<dependency>
 			<groupId>io.r2dbc</groupId>
 			<artifactId>r2dbc-h2</artifactId>
 		</dependency>
@@ -135,5 +172,68 @@
 		</dependency>
 
 	</dependencies>
+	
+	<profiles>
+		<!-- Docker for the Suppleo-Search API -->
+		<profile>
+			<id>docker</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+    					<artifactId>docker-maven-plugin</artifactId>
+    					<version>0.34.1</version>
+						<executions>
+							<execution>
+								<id>build</id>
+								<phase>package</phase>
+								<goals>
+									<goal>build</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<images>
+								<image>
+									<!-- Artifact Image -->
+									<name>me/review-reactive-api:${project.version}</name>
+									<build>
+										<nocache>true</nocache>
+										<dockerFile>Dockerfile</dockerFile>
+										<tags>
+											<tag>latest</tag>
+										</tags>
+										<assembly>
+											<targetDir>/maven/</targetDir>
+											<inline
+												xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+												xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+												<fileSets>
+													<fileSet>
+														<directory>${project.build.directory}</directory>
+														<outputDirectory>/</outputDirectory>
+														<includes>
+															<include>*.jar</include>
+														</includes>
+													</fileSet>
+													<!-- <fileSet> <outputDirectory>.</outputDirectory> <directory>${project.build.directory}/*.jar</directory> 
+														</fileSet> -->
+													<fileSet>
+														<outputDirectory>.</outputDirectory>
+														<directory>${project.basedir}/src/main/docker/</directory>
+														<filtered>true</filtered>
+													</fileSet>
+												</fileSets>
+											</inline>
+										</assembly>
+									</build>
+								</image>
+							</images>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	
 </project>

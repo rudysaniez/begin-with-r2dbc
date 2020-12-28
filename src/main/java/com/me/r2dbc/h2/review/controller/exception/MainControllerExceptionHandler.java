@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.me.r2dbc.h2.review.exception.InvalidInputException;
 import com.me.r2dbc.h2.review.exception.NotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +23,21 @@ public class MainControllerExceptionHandler {
 	 * @param ex
 	 * @return {@link HttpErrorInfo}
 	 */
-	@ResponseStatus(value=HttpStatus.NOT_FOUND)
+	@ResponseStatus(value = HttpStatus.NOT_FOUND)
 	@ExceptionHandler(NotFoundException.class)
 	public @ResponseBody HttpErrorInfo handlerNotFoundException(ServerHttpRequest request, Exception ex) {
 		return createHttpErrorInfo(HttpStatus.NOT_FOUND, request, ex);
+	}
+	
+	/**
+	 * @param request
+	 * @param ex
+	 * @return {@link HttpErrorInfo}
+	 */
+	@ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+	@ExceptionHandler(InvalidInputException.class)
+	public @ResponseBody HttpErrorInfo handlerInvalidInputException(ServerHttpRequest request, Exception ex) {
+		return createHttpErrorInfo(HttpStatus.UNPROCESSABLE_ENTITY, request, ex);
 	}
 	
 	/**

@@ -1,0 +1,10 @@
+
+#!/bin/bash
+
+set -e 
+
+cd $(dirname $0)
+
+docker build -t review-reactive-api .
+ 
+docker images | grep -i review-reactive-api

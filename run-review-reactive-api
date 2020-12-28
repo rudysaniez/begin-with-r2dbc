@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e 
+
+cd $(dirname $0)
+
+docker run -d --rm --name review-reactive-api --mount src=$(pwd)/config/,target=/etc/me,type=bind  -p 7000:7000 -e SPRING_PROFILES_ACTIVE="dev-scheduler" -e JAVA_OPTS="-Xms512M -Xmx512M" me/review-reactive-api:latest

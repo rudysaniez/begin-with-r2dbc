@@ -10,6 +10,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
@@ -20,9 +22,14 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.me.r2dbc.h2.review.bo.Review;
+import com.me.r2dbc.h2.review.Application.PaginationInformation;
+import com.me.r2dbc.h2.review.bo.ReviewEntity;
 import com.me.r2dbc.h2.review.service.AsciiArtService;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@EnableConfigurationProperties(PaginationInformation.class)
 @EnableR2dbcRepositories
 @EnableScheduling
 @EnableTransactionManagement
@@ -44,6 +51,14 @@ public class Application {
 		app.run(args);
 	}
 
+	@Getter @Setter
+	@ConfigurationProperties(prefix = "pagination")
+	public static class PaginationInformation {
+		
+		private Integer defaultPage;
+		private Integer defaultSize;
+	}
+	
 	@Profile("dev-init")
 	@Bean @Autowired
 	public ApplicationRunner setup(NamedParameterJdbcTemplate jdbcTemplate, AsciiArtService asciiService) {
@@ -60,7 +75,7 @@ public class Application {
 			namedParameters.put("content", "rsaniez");
 			namedParameters.put("creationDate", Timestamp.valueOf(LocalDateTime.now()));
 			
-			jdbcTemplate.update(Review.insert, namedParameters);
+			jdbcTemplate.update(ReviewEntity.insert, namedParameters);
 		};
 	}
 }
