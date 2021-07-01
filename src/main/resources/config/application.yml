@@ -12,18 +12,35 @@ management:
   endpoint:
     health:
       show-details: always
+      cache:
+        time-to-live: 20000ms
+    info:
+      cache:
+        time-to-live: 40000ms
     
 spring:
+  r2dbc:
+    url: r2dbc:h2:mem:///suppliersdb;DB_CLOSE_DELAY=1
+    username: sa
+    password:
+
   datasource:
-    hikari:
-      maximum-pool-size: 4
-      connection-timeout: 20000
+    url: jdbc:h2:mem:suppliersdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+
+  liquibase:
+    change-log: classpath:liquibase/create-tables.xml
+    enabled: true
+    url: jdbc:h2:mem:suppliersdb;DB_CLOSE_DELAY=-1
+    user: sa
+    password:
 
   data:
     jdbc:
       repositories:
         enabled: false
-        
+
   jackson:
     deserialization:
       accept-single-value-as-array: true
@@ -37,38 +54,24 @@ spring:
   webflux:
     base-path: /api/v1
 
+  application:
+    name: supplier-r2dbc-h2-raw-api
+
+info.application.name: ${spring.application.name}
+info.application.developer.name: rudysaniez
+info.application.developer.email: rudy.saniez@adeo.com
+info.team.domain: instore-operation-and-replenishment
+
 pagination:
   default-page: 0
   default-size: 20
 
----  
-spring.profiles: docker
-
-logging:
-  level:
-    root: INFO
-    '[org.springframework.jdbc.core]': TRACE
-    '[org.springframework.transaction]': TRACE
-    '[org.springframework.data.r2dbc]': TRACE
-    
-spring:
-
-  r2dbc:
-    url: r2dbc:h2:mem:///reviewsdb;DB_CLOSE_DELAY=1
-    username: sa
-    password:
-
-  datasource:
-    url: jdbc:h2:mem:reviewsdb;DB_CLOSE_DELAY=-1
-    username: sa
-    password:
-    
-  liquibase:
-    change-log: classpath:liquibase/create-tables.xml
-    enabled: true
-    url: jdbc:h2:mem:reviewsdb;DB_CLOSE_DELAY=-1
-    user: sa
-    password:
-
-server:
-  port: 7000
+strategy:
+  id:
+    bu: FR
+    storeIdFormat: "000"
+    storeIdMax: 100
+    supplierIdFormat: "00000000"
+    supplierIdMax: 99999999
+    fiscalIdFormat: "00000000"
+    fiscalIdMax: 999999
